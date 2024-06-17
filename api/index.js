@@ -9,7 +9,7 @@ Connectdb()
 
 app.use("/api/user",userroute)
 
-const PORT = 3006;
+const PORT = 5017;
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
