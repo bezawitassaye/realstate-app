@@ -1,6 +1,7 @@
 import usermodel from "../models/usermodels.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
+
 const registeruser = async (req, res) => {
     try {
         const existingUser = await usermodel.findOne({ email: req.body.email });
@@ -22,17 +23,16 @@ const registeruser = async (req, res) => {
         const newUser = new usermodel({
             username: req.body.username,
             email: req.body.email,
-            password: hashedPassword, // Store hashed password in database
+            password: hashedPassword,
         });
 
         await newUser.save();
         res.json({ success: true, message: "User registered successfully" });
 
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: "Internal server error" });
+        console.error(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 
-
-export {registeruser}
+export { registeruser };
