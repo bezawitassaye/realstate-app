@@ -45,8 +45,8 @@ const SignOut = () => {
                     </div>
                     <div className="mb-4">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                        <input onChange={changehandler} value={data.password} type="password" id="password" name="password" autoComplete="current-password" className="mt-1 block w-full px-3 py-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required />
-                    </div>
+                        <input  placeholder="***********" onChange={changehandler} value={data.password} type="password" id="password" name="password" autoComplete="current-password" className="mt-1 block w-full px-3 py-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder-black placeholder-xl" required />
+                        </div>
                     <div className="mb-4">
                         <button type="submit" className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Sign Up</button>
                     </div>

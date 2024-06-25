@@ -1,6 +1,13 @@
 import usermodel from "../models/usermodels.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import cookie from "cookie";
+
+const Createuser=(id)=>{
+    return jwt.sign({id},process.env.scret_jwt)
+
+}
 
 const registeruser = async (req, res) => {
     try {
@@ -45,10 +52,11 @@ const loginuser = async (req,res)=>{
         if(!ismatch){
             return res.json({success:false,message:"Incorrect Password"})
         }
-        return res.json({success:true,message:"User login Successfully"})
+        const token = Createuser(user._id)
+        res.json({success:true,token,user})
     } catch (error) {
         console.log(error)
-        return res.json({success:false,message:"Login Faild"})
+        res.json({success:false,message:"Login Faild"})
         
     }
 }
