@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInFailure,signInSuccess } from "../../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import OAuth from "../components/OAuth";
 const SignIn = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
@@ -24,6 +25,7 @@ const SignIn = () => {
             const response = await axios.post("http://localhost:5019/api/user/login", data);
             console.log(response.data)
             if (response.data.success){
+                localStorage.setItem('token', response.data.token);  
               navigate("/");
               dispatch(signInSuccess(response.data.user))
             }
@@ -60,8 +62,8 @@ const SignIn = () => {
                 </form>
                 <div className="text-center">
                     <span className="text-sm text-gray-600">Or sign in with</span>
-                    <button className="mt-2 w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Login with Google</button>
-                </div>
+                    <OAuth/>
+                 </div>
                
             </div>
         </div>

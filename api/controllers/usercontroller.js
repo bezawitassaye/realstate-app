@@ -60,5 +60,45 @@ const loginuser = async (req,res)=>{
         
     }
 }
+const google = async (req, res) => {
+    try {
+        let user = await usermodel.findOne({ email: req.body.email });
+         console.log(user)
+        if (user) {
+            // User found, generate token and respond
+            const token = Createuser(user._id);
 
-export { registeruser,loginuser };
+            res.cookie('access_token', token, { httpOnly: true })
+               .status(200)
+               .json({ success: true, token, user });
+        } else {
+            // User not found, create a new user
+            const generatedPassword = Math.random().toString(36).slice(-8) +
+                Math.random().toString(36).slice(-8);
+            const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
+
+            const newUser = new usermodel({
+                username: req.body.name.split(' ').join('').toLowerCase() +
+                    Math.random().toString(36).slice(-4),
+                email: req.body.email,
+                password: hashedPassword,
+                avatar: req.body.photo,
+            });
+
+            await newUser.save();
+
+            // Generate token for the new user
+            const token = Createuser(newUser._id);
+
+            res.cookie('access_token', token, { httpOnly: true })
+               .status(200)
+               .json({ success: true, token, user: newUser });
+        }
+    } catch (error) {
+        console.error('Google Sign-In Error:', error);
+        res.status(500).json({ success: false, message: 'Google Sign-In Failed' });
+    }
+};
+
+
+export { registeruser,loginuser,google };

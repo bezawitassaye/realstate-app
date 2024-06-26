@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
 
 const SignOut = () => {
     const navigate = useNavigate();
@@ -53,7 +54,7 @@ const SignOut = () => {
                 </form>
                 <div className="text-center">
                     <span className="text-sm text-gray-600">Or sign up with</span>
-                    <button className="mt-2 w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Login with Google</button>
+                    <OAuth/>
                 </div>
                 <div className="flex gap-2 mt-5">
                     <p>Have an account? 
