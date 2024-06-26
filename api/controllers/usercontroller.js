@@ -63,7 +63,7 @@ const loginuser = async (req,res)=>{
 const google = async (req, res) => {
     try {
         let user = await usermodel.findOne({ email: req.body.email });
-         console.log(user)
+       
         if (user) {
             // User found, generate token and respond
             const token = Createuser(user._id);
