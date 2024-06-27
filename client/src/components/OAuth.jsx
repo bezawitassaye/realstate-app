@@ -26,7 +26,7 @@ const OAuth = () => {
       // Handle response
       if (response.status === 200) {
         navigate("/");
-        dispatch(signInSuccess(response.data));
+        dispatch(signInSuccess(response.data.user));
         console.log(response.data);
         localStorage.setItem('token', response.data.token);
       } else {

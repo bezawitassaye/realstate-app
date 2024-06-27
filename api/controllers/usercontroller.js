@@ -67,7 +67,7 @@ const google = async (req, res) => {
         if (user) {
             // User found, generate token and respond
             const token = Createuser(user._id);
-
+            
             res.cookie('access_token', token, { httpOnly: true })
                .status(200)
                .json({ success: true, token, user });
@@ -100,5 +100,108 @@ const google = async (req, res) => {
     }
 };
 
+const updateUser = async (req, res) => {
+    try {
+        // Extract token from Authorization header
+        const token = req.headers.authorization.split(' ')[1];
 
-export { registeruser,loginuser,google };
+        // Check if token exists
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Authorization token not found" });
+        }
+
+        // Verify JWT token
+        const decoded = jwt.verify(token, process.env.scret_jwt);
+
+        // Extract user ID from decoded token
+        const userId = decoded.id;
+
+        // Find user by ID in the database
+        const user = await usermodel.findById(userId);
+
+        // Handle case where user is not found
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Update user details if provided in request body
+        if (req.body.username) {
+            user.username = req.body.username;
+        }
+        if (req.body.email) {
+            user.email = req.body.email;
+        }
+        if (req.body.password) {
+            // Hash new password before saving
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(req.body.password, salt);
+            user.password = hashedPassword;
+        }
+        if (req.body.avatar) {
+            user.avatar = req.body.avatar; // Assuming avatar URL is provided in request
+        }
+
+        // Save updated user object
+        await user.save();
+
+        // Respond with success message and updated user object
+        res.json({ success: true, message: "User updated successfully", user });
+
+    } catch (error) {
+        // Handle errors
+        console.error('Update User Error:', error.message);
+
+        // Check for specific JWT errors
+        if (error instanceof jwt.JsonWebTokenError) {
+            return res.status(401).json({ success: false, message: "Invalid token" });
+        }
+
+        // Handle other errors
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+const deleteUser = async (req, res) => {
+    try {
+        // Extract token from Authorization header
+        const token = req.headers.authorization.split(' ')[1];
+
+        // Check if token exists
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Authorization token not found" });
+        }
+
+        // Verify JWT token
+        const decoded = jwt.verify(token, process.env.scret_jwt);
+
+        // Extract user ID from decoded token
+        const userId = decoded.id;
+
+        // Find user by ID in the database
+        const user = await usermodel.findById(userId);
+
+        // Handle case where user is not found
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Delete user from the database using Mongoose document instance method
+        await user.deleteOne();
+
+        // Respond with success message
+        res.json({ success: true, message: "User deleted successfully" });
+
+    } catch (error) {
+        // Handle errors
+        console.error('Delete User Error:', error.message);
+
+        // Check for specific JWT errors
+        if (error instanceof jwt.JsonWebTokenError) {
+            return res.status(401).json({ success: false, message: "Invalid token" });
+        }
+
+        // Handle other errors
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+export { registeruser,loginuser,google ,updateUser,deleteUser};

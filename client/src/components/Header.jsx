@@ -28,7 +28,7 @@ const Header = () => {
                 
                     {currentUser?(
                       
-                    <img  className="rounded-full h-9 w-9 object-cover" src={currentUser.user.avatar} alt="profile"/> 
+                    <img  className="rounded-full h-9 w-9 object-cover" src={currentUser.avatar} alt="profile"/> 
                     ):(
                       <li className="sm:inline text-slate-700 hover:underline cursor-pointer"> Signup</li>
                   
