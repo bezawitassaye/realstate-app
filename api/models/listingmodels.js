@@ -5,15 +5,16 @@ const listingschema = mongoose.Schema({
         type:String,
         required:true
     },
-    desciption:{
-        type:String,
-        required:true
-    },
+    
     address:{
         type:String,
         required:true
     },
-    price:{
+    description:{
+        type:String,
+        required:true
+    },
+    regularPrice:{
         type:Number,
         required:true
     },
@@ -25,15 +26,15 @@ const listingschema = mongoose.Schema({
         type:Number,
         required:true
     },
-    beds:{
+    bedrooms:{
         type:Number,
         required:true
     },
-    furnished:{
+    Furnished:{
         type:Boolean,
         required:true
     },
-    parking:{
+    Parking:{
         type:Boolean,
         required:true
     },
@@ -41,7 +42,7 @@ const listingschema = mongoose.Schema({
         type:String,
         required:true
     },
-    offer:{
+    Offer:{
         type:Boolean,
         required:true
     },
