@@ -16,6 +16,7 @@ const Profile = () => {
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [listings, setListings] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate=useNavigate()
@@ -134,6 +135,22 @@ const Profile = () => {
         // Handle error scenario
     }
 };
+// eslint-disable-next-line no-unused-vars
+const fetchUserListings = async () => {
+  try {
+      const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+      const response = await axios.get('http://localhost:5019/api/user/getlistings', {
+          headers: {
+              Authorization: `Bearer ${token}`
+          }
+      });
+
+      setListings(response.data.listings);
+  } catch (error) {
+      console.error('Fetch user listings error:', error);
+      // Handle error scenario
+  }
+};
 
   return (
     <div className='p-3 max-w-lg mx-auto'>
@@ -204,6 +221,31 @@ const Profile = () => {
         <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>Sign out</span>
             
       </div>
+      <div>
+                <h2 onClick={fetchUserListings} className="text-2xl mt-5 mb-3 text-center">My Listings</h2>
+                <ul>
+                    {listings.map(listing => (
+                        <li key={listing._id} className="mb-3 border rounded-lg p-3 flex justify-between items-center gap-4">
+                            <Link to={`/listing/${listing._id}`} className="text-blue-600">
+                               <img src={listing.imageUrls[0]}
+                               alt='lisiting cover'
+                               className='h-16 w-16 object-contain'
+                               />
+                            
+                            </Link>
+
+                            <Link to={`/listing/${listing._id}`} className="text-slate-700
+                             font-semibold hover:underline truncate flex-1">
+                                 <p >{listing.name}</p>
+                            </Link>
+                            <div className='flex flex-col items-center'>
+                              <button className='text-red-700 uppercase'>Delete</button>
+                              <button className='text-green-700 uppercase'>Edit</button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
     </div>
   );
 };

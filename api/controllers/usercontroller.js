@@ -3,6 +3,7 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
+import Listingmodel from "../models/listingmodels.js";
 
 const Createuser=(id)=>{
     return jwt.sign({id},process.env.scret_jwt)
@@ -210,4 +211,32 @@ const Signout= async(req,res)=>{
     res.json({ success: true, message: "User signed out successfully" });
 
 }
-export { registeruser,loginuser,google ,updateUser,deleteUser,Signout};
+
+const getuserlisting=async(req,res)=>{
+    try {
+        // Extract token from headers
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ success: false, message: 'Authorization header missing' });
+        }
+
+        // Verify the token
+        jwt.verify(token, process.env.scret_jwt, async (err, decoded) => {
+            if (err) {
+                return res.status(403).json({ success: false, message: 'Failed to authenticate token' });
+            }
+
+            // Token verified, fetch user listings
+            const userId = decoded.id;
+            const listings = await Listingmodel.find({ userRef: userId });
+
+            res.status(200).json({ success: true, listings });
+        });
+    } catch (error) {
+        console.error('Fetch user listings error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch user listings' });
+    }
+}
+export { registeruser,loginuser,google ,updateUser,deleteUser,Signout,getuserlisting};
