@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import axios from 'axios';
 // eslint-disable-next-line no-unused-vars
-import { deleeteUserFailure, deleteUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../../redux/user/userSlice';
+import { deleeteUserFailure, deleteUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess,SignoutUserSuccess ,SignuotUserFailure} from '../../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -111,6 +111,30 @@ const Profile = () => {
     }
   };
   
+  const handleSignOut = async () => {
+    try {
+        const token = localStorage.getItem('token'); // Get token from localStorage
+        await axios.post(
+            'http://localhost:5019/api/user/signout',
+            {}, // Empty body or any required data for signout API
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+
+        localStorage.removeItem('token'); // Clear token from localStorage
+        dispatch(SignoutUserSuccess()); // Dispatch sign-out success action or handle as needed
+        navigate("/"); // Redirect to home page or login after sign-out
+
+    } catch (error) {
+        console.error('Sign-out error:', error);
+        dispatch(SignuotUserFailure(error.message)); // Dispatch sign-out failure action
+        // Handle error scenario
+    }
+};
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -173,7 +197,8 @@ const Profile = () => {
       </form>
       <div className='flex justify-between mt-5'>
         <span onClick={handleDeleteAccount} className='text-red-700 cursor-pointer'>Delete account</span>
-        <span className='text-red-700 cursor-pointer'>Sign out</span>
+        <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>Sign out</span>
+            
       </div>
     </div>
   );

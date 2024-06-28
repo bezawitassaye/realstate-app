@@ -204,4 +204,10 @@ const deleteUser = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
-export { registeruser,loginuser,google ,updateUser,deleteUser};
+
+const Signout= async(req,res)=>{
+    res.clearCookie('access_token');
+    res.json({ success: true, message: "User signed out successfully" });
+
+}
+export { registeruser,loginuser,google ,updateUser,deleteUser,Signout};
