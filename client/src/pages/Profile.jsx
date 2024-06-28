@@ -8,7 +8,7 @@ import axios from 'axios';
 // eslint-disable-next-line no-unused-vars
 import { deleeteUserFailure, deleteUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess,SignoutUserSuccess ,SignuotUserFailure} from '../../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const fileRef = useRef(null);
@@ -190,10 +190,14 @@ const Profile = () => {
         />
         <button
           type='submit'
-          className='w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600'
-        >
+          className='bg-blue-700 text-white mt-2 p-3 rounded-lg uppercase text-center 
+        hover:opacity-95'>
           Update
         </button>
+        <Link className='bg-red-700 text-white mt-2 p-3 rounded-lg uppercase text-center 
+        hover:opacity-95' to={"/create-listing"}>
+          Create Listing
+        </Link>
       </form>
       <div className='flex justify-between mt-5'>
         <span onClick={handleDeleteAccount} className='text-red-700 cursor-pointer'>Delete account</span>

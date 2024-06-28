@@ -10,3 +10,5 @@ const createListing=async(req,res)=>{
         
     }
 }
+export {createListing}
+
