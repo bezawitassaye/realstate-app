@@ -152,6 +152,28 @@ const fetchUserListings = async () => {
   }
 };
 
+const handleDeleteListing = async (listingId) => {
+  try {
+    const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+    const response = await axios.delete(`http://localhost:5019/api/list/delete/${listingId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (response.data.success === false) {
+      console.log("delete listing not successful");
+    }
+
+    // Remove the deleted listing from state
+    setListings(prevListings => prevListings.filter(listing => listing._id !== listingId));
+  } catch (error) {
+    console.error('Delete listing error:', error);
+    // Handle error scenario
+  }
+};
+
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -239,8 +261,8 @@ const fetchUserListings = async () => {
                                  <p >{listing.name}</p>
                             </Link>
                             <div className='flex flex-col items-center'>
-                              <button className='text-red-700 uppercase'>Delete</button>
-                              <button className='text-green-700 uppercase'>Edit</button>
+                            <button onClick={() => handleDeleteListing(listing._id)} className='text-red-700 uppercase'>Delete</button>
+ <button className='text-green-700 uppercase'>Edit</button>
                             </div>
                         </li>
                     ))}
