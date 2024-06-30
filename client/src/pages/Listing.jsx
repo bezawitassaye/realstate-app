@@ -9,7 +9,10 @@ import {
     // eslint-disable-next-line no-unused-vars
     FaBath,FaBed,FaChair,FaMapMarkedAlt,FaMapMarkerAlt,FaParking,FaShare,
   } from 'react-icons/fa';
+import { useSelector } from "react-redux";
+import Contact from "./Contact";
 const Listing = () => {
+    const {currentUser} = useSelector(state => state.user)
     SwiperCore.use([Navigation])
     const { id } = useParams();
     // eslint-disable-next-line no-unused-vars
@@ -17,6 +20,7 @@ const Listing = () => {
     const [formData, setFormData] = useState({});
     // eslint-disable-next-line no-unused-vars
     const [loading, setLoading] = useState(true);
+    const [contact,setcontact]=useState(false)
     useEffect(() => {
         fetchListing(id);
       }, [id]);
@@ -65,11 +69,11 @@ const Listing = () => {
             {renderSwiper()}
             <div className='flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4'>
             <p className='text-2xl font-semibold'>
-              {formData.name} - ${' '}
+              {/* {formData.name} - ${' '}
               {formData.offer
                 ? formData.discountPrice.toLocaleString('en-US')
                 : formData.regularPrice.toLocaleString('en-US')}
-              {formData.type === 'rent' && ' / month'}
+              {formData.type === 'rent' && ' / month'} */}
             </p>
             <p className='flex items-center mt-6 gap-2 text-slate-600  text-sm'>
               <FaMapMarkerAlt className='text-green-700' />
@@ -114,6 +118,12 @@ const Listing = () => {
                              <FaChair className="text-lg"/>
                             {formData.Furnished?"Furnished":"Not Furnished"}</li>
                      </ul>
+                     {currentUser && formData.userRef !== currentUser._id && !contact && (
+                     <button onClick={()=>setcontact(true)} className="bg-slate-700 text-white rounded-lg uppercase 
+                     hover:opacity-95"
+                     >Contact landlord</button>
+                    )}
+                    {contact && <Contact formData={formData}/>}
             
             </div>
         </div>
