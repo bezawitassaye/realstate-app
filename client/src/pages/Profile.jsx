@@ -173,6 +173,11 @@ const handleDeleteListing = async (listingId) => {
   }
 };
 
+// eslint-disable-next-line no-unused-vars
+const handleEditListing = (listingId) => {
+  // Navigate to the edit page for the specific listing
+  navigate(`/edit-listing/${listingId}`);
+};
 
   return (
     <div className='p-3 max-w-lg mx-auto'>
@@ -262,7 +267,10 @@ const handleDeleteListing = async (listingId) => {
                             </Link>
                             <div className='flex flex-col items-center'>
                             <button onClick={() => handleDeleteListing(listing._id)} className='text-red-700 uppercase'>Delete</button>
- <button className='text-green-700 uppercase'>Edit</button>
+                            
+                            <Link to={`/update/${listing._id}`} className="text-green-700 uppercase">Edit</Link>
+           
+             
                             </div>
                         </li>
                     ))}

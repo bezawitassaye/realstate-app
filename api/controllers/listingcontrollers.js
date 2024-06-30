@@ -33,5 +33,42 @@ const deleteListing = async (req, res) => {
     }
 };
 
-export {createListing,deleteListing}
+const fechlisting = async(req,res)=>{
+    try {
+        const { id } = req.params;
+        const listing = await Listingmodel.findById(id);
+        if (!listing) {
+          return res.status(404).json({ success: false, message: 'Listing not found' });
+        }
+        res.status(200).json({ success: true, listing });
+      } catch (error) {
+        console.error('Fetch listing error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+      }
+}
+
+const updatelisting = async(req,res)=>{
+    try {
+        const { id } = req.params;
+        const updatedListing = req.body;
+    
+        
+    
+        const listing = await Listingmodel.findByIdAndUpdate(id, updatedListing, {
+          new: true,
+        });
+    
+        if (!listing) {
+          return res
+            .status(404)
+            .json({ success: false, message: "Listing not found" });
+        }
+    
+        res.status(200).json({ success: true, listing });
+      } catch (error) {
+        console.error("Update listing error:", error);
+        res.status(500).json({ success: false, message: "Server error" });
+      }
+}
+export {createListing,deleteListing,fechlisting,updatelisting}
 
