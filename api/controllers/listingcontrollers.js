@@ -70,5 +70,49 @@ const updatelisting = async(req,res)=>{
         res.status(500).json({ success: false, message: "Server error" });
       }
 }
-export {createListing,deleteListing,fechlisting,updatelisting}
+
+  const getlisting = async(req,res)=>{
+    try {
+      const limit = parseInt(req.query.limit) || 9;
+      const startIndex = parseInt(req.query.startIndex) || 0;
+      let Offer = req.query.Offer
+      if(Offer === undefined || Offer === "false"){
+        Offer = {$in:[false,true]};
+      }
+      let Furnished = req.query.Furnished
+      if(Furnished === undefined || Furnished === "false"){
+        Furnished = {$in:[false,true]};
+      }
+
+      let Parking = req.query.Parking
+      if(Parking === undefined || Parking === "false"){
+        Parking = {$in:[false,true]};
+      }
+      
+      let type = req.query.type
+      if(type === undefined || type === "all"){
+        type = {$in:["Sell","Rent"]};
+      }
+
+      const searchTerm = req.query.searchTerm || "";
+      const sort = req.query.sort || "createdAt";
+      const order = req.query.order || "desc";
+
+      const listings = await Listingmodel.find({
+        name:{$regex:searchTerm,$options:"i"},
+        Offer,
+        Furnished,
+        Parking,
+        type
+      }).sort({
+        [sort]:order
+      }.limit(limit).skip(startIndex))
+      return res.json(listings)
+    } catch (error) {
+      console.log(error)
+      res.json(error)
+      
+    }
+  }
+export {createListing,deleteListing,fechlisting,updatelisting,getlisting}
 
