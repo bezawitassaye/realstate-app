@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute';
 import CreateListing from './pages/CreateListing';
 import ListingDetail from './pages/ListingDetail';
 import Listing from './pages/Listing';
+import Search from './pages/Search';
 
 const App = () => {
   return (
@@ -23,7 +24,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-listing" element={<CreateListing />} />
           <Route path="/update/:id" element={<ListingDetail />} />
-
+          <Route path='/search' element={<Search/>}/> 
         </Route>
         
         {/* Correct the Route for listing detail */}
