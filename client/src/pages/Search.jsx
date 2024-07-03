@@ -213,12 +213,12 @@ const Search = () => {
       <div className="flex-1">
         <h1 className="text-3xl font-semibold border-b p-3 text-slate-700">Listing results:</h1>
         <div className="p-7 flex flex-wrap gap-4">
-            {
-              listings.map((lising)=>(
-                <ListingItems key={lising._id} lising={lising}/>
-               
-              ))
-            }
+        {
+  listings.map((lising) => (
+    <ListingItems key={lising._id} lising={lising} />
+  ))
+}
+
 
             {
               showMore && (
