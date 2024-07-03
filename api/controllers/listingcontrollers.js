@@ -71,48 +71,65 @@ const updatelisting = async(req,res)=>{
       }
 }
 
-  const getlisting = async(req,res)=>{
-    try {
-      const limit = parseInt(req.query.limit) || 9;
-      const startIndex = parseInt(req.query.startIndex) || 0;
-      let Offer = req.query.Offer
-      if(Offer === undefined || Offer === "false"){
-        Offer = {$in:[false,true]};
-      }
-      let Furnished = req.query.Furnished
-      if(Furnished === undefined || Furnished === "false"){
-        Furnished = {$in:[false,true]};
-      }
+const getlisting = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 9;
+    const startIndex = parseInt(req.query.startIndex) || 0;
 
-      let Parking = req.query.Parking
-      if(Parking === undefined || Parking === "false"){
-        Parking = {$in:[false,true]};
-      }
-      
-      let type = req.query.type
-      if(type === undefined || type === "all"){
-        type = {$in:["Sell","Rent"]};
-      }
-
-      const searchTerm = req.query.searchTerm || "";
-      const sort = req.query.sort || "createdAt";
-      const order = req.query.order || "desc";
-
-      const listings = await Listingmodel.find({
-        name:{$regex:searchTerm,$options:"i"},
-        Offer,
-        Furnished,
-        Parking,
-        type
-      }).sort({
-        [sort]:order
-      }.limit(limit).skip(startIndex))
-      return res.json(listings)
-    } catch (error) {
-      console.log(error)
-      res.json(error)
-      
+    let Offer = req.query.Offer;
+    if (Offer === undefined || Offer === "false") {
+      Offer = { $in: [false, true] };
+    } else {
+      Offer = Offer === "true"; // Convert string "true" to boolean true
     }
+
+    let Furnished = req.query.Furnished;
+    if (Furnished === undefined || Furnished === "false") {
+      Furnished = { $in: [false, true] };
+    } else {
+      Furnished = Furnished === "true"; // Convert string "true" to boolean true
+    }
+
+    let Parking = req.query.Parking;
+    if (Parking === undefined || Parking === "false") {
+      Parking = { $in: [false, true] };
+    } else {
+      Parking = Parking === "true"; // Convert string "true" to boolean true
+    }
+
+    let type = req.query.type;
+    if (type === undefined || type === "all") {
+      type = { $in: ["Sell", "Rent"] };
+    } else {
+      type = type === "Sell" || type === "Rent" ? type : "Sell"; // Default to "Sell" if not "Sell" or "Rent"
+    }
+
+    const searchTerm = req.query.searchTerm || "";
+    const sort = req.query.sort || "createdAt";
+    const order = req.query.order || "desc";
+
+    const listings = await Listingmodel.find({
+      name: { $regex: searchTerm, $options: "i" },
+      Offer,
+      Furnished,
+      Parking,
+      type
+    })
+    .sort({ [sort]: order })
+    .limit(limit)
+    .skip(startIndex);
+
+    if (listings.length === 0) {
+      return res.status(404).json({ message: 'No listings found' });
+    }
+
+    return res.json(listings);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
+}
+
+
 export {createListing,deleteListing,fechlisting,updatelisting,getlisting}
 
