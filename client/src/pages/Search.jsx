@@ -17,7 +17,7 @@ const Search = () => {
     order: "desc"
   });
   const [listings, setListings] = useState([]);
-  console.log(listings)
+  const [showMore,setShowMore] = useState(false)
   const handlechange = (e) => {
     if (e.target.id === "all" || e.target.id === "Rent" || e.target.id === "Sell") {
       setData({ ...data, type: e.target.id });
@@ -61,11 +61,19 @@ const Search = () => {
 
     const fetchingListings = async () => {
       try {
+        setShowMore(false)
         const searchQuery = urlParams.toString();
         const response = await axios.get(`http://localhost:5019/api/list/get?${searchQuery}`);
         setListings(response.data);
         console.log("success");
         console.log(response)
+        if(data.length > 8){
+          setShowMore(true)
+        }
+
+        else{
+          setShowMore(false)
+        }
       } catch (error) {
         console.error(error);
         
@@ -88,6 +96,19 @@ const Search = () => {
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
   };
+
+  const onShowMoreClick = async()=>{
+    const numberOfListings = listings.length;
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams;
+    urlParams.set("startIndex",startIndex);
+    const searchQuery = urlParams.toString();
+    const  response = await axios.get(`http://localhost:5019/api/list/get?${searchQuery}`);
+    if(response.data.length < 9){
+      setShowMore(false)
+    }  
+    setListings([...listings,...data])   
+  }
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -197,6 +218,20 @@ const Search = () => {
                 <ListingItems key={lising._id} lising={lising}/>
                
               ))
+            }
+
+            {
+              showMore && (
+                <button
+                 onClick={
+                  onShowMoreClick
+                 }
+
+                 className="text-green-700 hover:underline p-7 text-center w-full"
+                >
+                  Show more
+                </button>
+              )
             }
         </div>
       </div>
