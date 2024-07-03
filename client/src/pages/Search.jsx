@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import ListingItems from "../ListingItems";
 
 const Search = () => {
   const location = useLocation();
@@ -188,21 +189,16 @@ const Search = () => {
           </button>
         </form>
       </div>
-      <div className="flex flex-col w-full p-7">
+      <div className="flex-1">
         <h1 className="text-3xl font-semibold border-b p-3 text-slate-700">Listing results:</h1>
-        {listings.length > 0 ? (
-          <ul>
-            {listings.map((listing) => (
-              <li key={listing._id}>
-                <p>Name: {listing.name}</p>
-                <p>Type: {listing.type}</p>
-                {/* Add more details as needed */}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No listings found.</p>
-        )}
+        <div className="p-7 flex flex-wrap gap-4">
+            {
+              listings.map((lising)=>(
+                <ListingItems key={lising._id} lising={lising}/>
+               
+              ))
+            }
+        </div>
       </div>
     </div>
   );
